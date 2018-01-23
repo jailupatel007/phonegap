@@ -48,7 +48,7 @@
 					crossDomain: true,
 					dataType: "json",
 					success: function(data){						
-						document.getElementById("getKeyValue").innerHTML = JSON.parse(JSON.stringify(data.key));	
+						document.getElementById("getKeyValue").innerHTML ="key:"+ JSON.parse(JSON.stringify(data.key));	
 					},
 				error : function(e)
 				{		
@@ -72,7 +72,7 @@
 
 <body>
     <script type="text/javascript" src="cordova.js"></script> 
-	<input type="Button" value="Get Data"  onClick="onLoad();" name="" />
+	<input type="Button" value="Get Data"  onClick="onGetJSONData();" name="" />
 		<h4>Get Data From http://betarabbit.com/sandbox/json_out.php </h4> Response Key Value :<div id="getKeyValue"></div>
 	_____________________________________________________________
 	<input type="Button" value="Send Data"  onClick="sendString();" name="" />
