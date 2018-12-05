@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	
+	<title>Home</title>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/input-style.css">
+    <link href="css/responsive.css" rel="stylesheet">
+   
+    <script src="js/jquery.min.js"></script>
+	<script src="js/execs.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+		$(document).ajaxStart(function () {
+		  showAjaxBusy();
+		});
+
+		$(document).ajaxStop(function () {
+			hideAjaxBusy();
+		});
+		$(document).ready(function() {
+			$('input[type=radio][name=type]').change(function() {
+			    var search = $("#search").val();
+				fun_autosuggest(search);
+			});
+		});
+		function onDeviceReady() 
+		{
+			
+			hideAjaxBusy();
+			getNotificationCount();	
+			document.addEventListener("backbutton",onBackButton,false);
+			
+			var user_id = localStorage.getItem("user_id");
+			var admin_id = localStorage.getItem("admin_id");
+			if(!user_id > 0 && !admin_id > 0)
+			{
+				$('#signupDivMain').show();				
+			}
+			
+		}	
+		
+		var lastTimeBackPress=0;
+		var timePeriodToExit=3000;
+		function onBackButton(e)
+		{
+			e.preventDefault();
+			e.stopPropagation();
+			if(new Date().getTime() - lastTimeBackPress < timePeriodToExit){
+				navigator.app.exitApp();
+			}else{
+				window.plugins.toast.showWithOptions(
+					{
+					  message: "Press again to exit.",
+					  duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+					  position: "bottom",
+					  addPixelsY: -40  // added a negative value to move it up a bit (default 0)
+					}
+				  );				
+				lastTimeBackPress=new Date().getTime();
+			}
+		 };
+		
+		function getNotificationCount()
+		{		
+			var timestamp = new Date().getUTCMilliseconds();
+			var auth_key ="SDmObKDJPhsFNNOZyrPYGw";
+			var user_id = localStorage.getItem("user_id");
+			var environment = localStorage.getItem("environment");	
+			var dataString="auth_key="+auth_key+"&uID="+user_id+"&method=message_count&temp="+timestamp+"&environment="+environment;	
+		
+			$.ajax({
+				type: "POST",
+				url: "http://palmbeachexecsapp-com.server-bbdoorbms-com.vps.ezhostingserver.com/pb_api.php",
+				data: dataString,
+				crossDomain: true,
+				cache: false,
+				global: false, 
+				success: function(data)
+				{						
+					var resultData = "";
+					var resultObject =JSON.stringify(data);						
+					if(JSON.parse(JSON.stringify(data.code))==0)
+					{ 
+						var messageCount = JSON.parse(JSON.stringify(data.message_count));
+						if(messageCount > 0)
+						{
+							document.getElementById('notificationCountDiv').innerHTML = "<span class='badge' id='notificationCount'>"+messageCount+"</span>";
+						}							
+					}
+					else
+					{
+						alertWithText(JSON.parse(JSON.stringify(data.message)),'closeAlert');
+					}						
+				},
+				error : function(e)
+				{		
+			//		alertWithText('Something went wrong. Couldn\'t load data.','closeAlert');
+				}
+			});
+		}
+		function fun_showLogin()
+		{	
+			fun_hideRegister();
+			var admin_id = localStorage.getItem("admin_id");
+			if(admin_id>0)
+			{
+				window.location.href ="userList.html";
+			}
+			else
+			{
+				$('#loginDivMain').show();
+				
+			}
+		}
+		function fun_hideLogin()
+		{
+			$('#loginDivMain').hide();
+		}
+		function fun_hideRegister()
+		{
+			$('#signupDivMain').hide();
+		}
+		function fun_notification()
+		{
+			window.location.href ="notifications.html";
+		}
+		function fun_search()
+		{
+			
+			var searchText  = $("#search").val();
+			var type = $("input[name='type']:checked"). val();
+			localStorage.setItem("search", searchText);
+			localStorage.setItem("type", type);			
+			window.location.href ="business_listing.html";
+			$("#search").val("");			
+		}
+		function fun_searchAutosuggest(searchText)
+		{
+			var type = $("input[name='type']:checked"). val();
+			localStorage.setItem("search", searchText);
+			localStorage.setItem("type", type);			
+			window.location.href ="business_listing.html";	
+			$("#search").val("");
+		}
+		function fun_autosuggest(searchText)
+		{
+			searchText=searchText.replace(/'/g, "\\'");
+			var user_id = localStorage.getItem("user_id");
+			var timestamp = new Date().getUTCMilliseconds();
+			var stringLength = searchText.length;
+			if(stringLength<3)
+			{
+				$("#auto_suggestname").hide();
+			}
+			else
+			{
+				if(checkConnection())
+				{
+					var type = $("input[name='type']:checked").val();
+					var environment = localStorage.getItem("environment");	
+					$.ajax({
+						url: "http://palmbeachexecsapp-com.server-bbdoorbms-com.vps.ezhostingserver.com/webservice/webservice_search_v2.php?user_id="+user_id+"&search="+searchText+"&type="+type+"&temp="+timestamp+"&environment="+environment,
+						type: "GET",
+						dataType: "json",
+						data: {},
+						crossDomain: true,
+						cache: false,
+						global: false, 
+						success : function(data)
+						{						
+							var resultData = "";
+							var resultObject =JSON.stringify(data);
+							if(JSON.parse(JSON.stringify(data.Status))==2)
+							{
+							
+							}
+							else if(JSON.parse(JSON.stringify(data.Status))==0)
+							{
+								var dataString = "<a href='#'><img src='images/suggest_searchicon.png' /><span>No Data Found</span></a>";
+								document.getElementById("auto_suggestname").innerHTML = dataString;
+								$("#auto_suggestname").show();
+							}
+							else
+							{					
+								if(type==1)
+								{
+									for (var i = 0; i < JSON.stringify(data.Posts.length); i++) 
+									{
+										var companyName=data.Posts[i].company_name;
+										companyName=companyName.replace(/'/g, "\\'");
+										resultData +='<a  href="javascript:fun_searchAutosuggest(\''+companyName+'\');" >';
+										resultData +="<img src='images/suggest_searchicon.png' />";
+										resultData +="<span>";
+										resultData += data.Posts[i].company_name;
+										resultData +="</span>";
+										resultData +="</a>";
+									}
+									document.getElementById("auto_suggestname").innerHTML = resultData;		
+									$("#auto_suggestname").show();
+								}	
+								else if(type==2)
+								{
+									for (var i = 0; i < JSON.stringify(data.Posts.length); i++) 
+									{
+										var companyPersonName=data.Posts[i].company_person_name;
+										companyPersonName=companyPersonName.replace(/'/g, "\\'");
+										resultData +='<a  href="javascript:fun_searchAutosuggest(\''+companyPersonName+'\');" >';
+										resultData +="<img src='images/suggest_searchicon.png' />";
+										resultData +="<span>";
+										resultData += data.Posts[i].company_person_name;
+										resultData +="</span>";
+										resultData +="</a>";
+									}
+									document.getElementById("auto_suggestname").innerHTML = resultData;		
+									$("#auto_suggestname").show();
+								}
+								else if(type==3)
+								{
+									for (var i = 0; i < JSON.stringify(data.Posts.length); i++) 
+									{
+										var classification=data.Posts[i].classification;
+										classification=classification.replace(/'/g, "\\'");
+										resultData +='<a  href="javascript:fun_searchAutosuggest(\''+classification+'\');" >';
+										resultData +="<img src='images/suggest_searchicon.png' />";
+										resultData +="<span>";
+										resultData += data.Posts[i].classification;
+										resultData +="</span>";
+										resultData +="</a>";
+									}
+									document.getElementById("auto_suggestname").innerHTML = resultData;		
+									$("#auto_suggestname").show();
+								}
+								else if(type==4)
+								{
+									for (var i = 0; i < JSON.stringify(data.Posts.length); i++) 
+									{
+										var nick=data.Posts[i].nick;
+										nick=nick.replace(/'/g, "\\'");
+										resultData +='<a  href="javascript:fun_searchAutosuggest(\''+nick+'\');" >';
+										resultData +="<img src='images/suggest_searchicon.png' />";
+										resultData +="<span>";
+										resultData += data.Posts[i].nick;
+										resultData +="</span>";
+										resultData +="</a>";
+									}
+									document.getElementById("auto_suggestname").innerHTML = resultData;		
+									$("#auto_suggestname").show();
+								}
+								
+							
+							}
+						},
+						error : function(e)
+						{		
+							//alertWithText("Something went wrong. Couldn't load data.",'closeAlert');
+						}
+					});	
+				}
+			}		
+		}
+		function fun_signup()
+		{
+			if(checkConnection())
+			{
+				var timestamp = new Date().getUTCMilliseconds();
+				var firstname=$("#firstname").val();
+				var lastname=$("#lastname").val();
+				var email=$("#email").val();
+				var auth_key ="SDmObKDJPhsFNNOZyrPYGw";		
+				var channels_id=1;	
+				
+				if($.trim(firstname).length==0 || $.trim(lastname).length==0 || $.trim(email).length==0)
+				{
+					alertWithText('Please enter required details!','closeAlert');
+					return false;
+				}
+
+				var push = PushNotification.init({
+				android: {
+						  senderID: "1089123328152"
+						},
+						ios: {
+						  alert: "true",
+						  badge: "true",
+						  sound: "true",
+
+						}
+				});
+				push.on('registration', function(data) 
+				{
+					<!--showAjaxBusy();-->
+					var device_token=data.registrationId;
+					var device_type= device.platform;
+					var environment = localStorage.getItem("environment");	
+					var deviceID=device.uuid;	
+					
+					var dataString="auth_key="+auth_key+"&fname="+firstname+"&lname="+lastname+"&email="+email+"&device_token="+device_token+"&ua_user=1&device_type="+device_type+"&channels_id="+channels_id+"&temp="+timestamp+"&environment="+environment+"&deviceID="+deviceID;		
+				
+					$.ajax({
+						type: "GET",
+						url: "http://palmbeachexecsapp-com.server-bbdoorbms-com.vps.ezhostingserver.com/api/push",
+						data: dataString,
+						crossDomain: true,
+						cache: false,
+						success: function(data)
+						{				
+						<!--	hideAjaxBusy();-->
+							var resultObject =JSON.stringify(data);								
+							if(JSON.parse(JSON.stringify(data.code))==0)
+							{ 
+								localStorage.setItem("user_id", JSON.parse(JSON.stringify(data.user_id)));
+								fun_hideRegister();
+							}
+							else
+							{
+								alertWithText(JSON.parse(JSON.stringify(data.message)),'closeAlert');
+							}
+						},
+						error : function(e)
+						{		
+							alertWithText("Something went wrong!",'closeAlert');
+						}
+					});
+				});
+				push.on('error', function(e) { alert(e)});
+			}
+		}
+		function fun_login()
+		{		
+			if(checkConnection())
+			{
+				var timestamp = new Date().getUTCMilliseconds();
+				var username=$("#username").val();
+				var auth_key ="SDmObKDJPhsFNNOZyrPYGw";
+				var password=$("#password").val();					
+				var environment = localStorage.getItem("environment");	
+				if($.trim(username).length==0 || $.trim(password).length==0)
+				{
+					alertWithText('Please enter required details!','closeAlert');
+					return false;
+				}
+				<!--showAjaxBusy();-->
+				var dataString="auth_key="+auth_key+"&username="+username+"&password="+password+"&temp="+timestamp+"&environment="+environment;	
+				
+				$.ajax({
+					type: "POST",
+					url: "http://palmbeachexecsapp-com.server-bbdoorbms-com.vps.ezhostingserver.com/api/admin_login/",
+					data: dataString,
+					crossDomain: true,
+					cache: false,
+					success: function(data)
+					{		
+					<!--	hideAjaxBusy();-->	
+						if(JSON.parse(JSON.stringify(data.code))==0)
+						{ 
+							localStorage.setItem("admin_id", JSON.parse(JSON.stringify(data.admin_id)));										
+							window.location.href ="userList.html";	
+						}
+						else
+						{
+							alertWithText(JSON.parse(JSON.stringify(data.message)),'closeAlert');
+						}
+						
+					},
+					error: function(e)
+					{
+						<!--hideAjaxBusy();-->
+						alertWithText("Something went wrong!",'closeAlert');						
+					}
+				});
+			}
+		}
+		function fun_event()
+		{
+			//window.location.href ="event_list_calendar.html";
+		
+			window.location.href ="event_list.html";
+		}
+		window.setInterval(function(){getNotificationCount()}, 3000);
+</script>
+	
+</head>
+<body onLoad="onLoad();">
+	<div id="loading">
+		<table cellpadding="0" cellspacing="0" border="0" class="splash">
+			<tr>
+				<td><div class="loader"></div></td>
+			</tr>
+		</table>
+	</div>
+	<div id="alert-box" class="alert-box" ></div>
+    <div class="col-xs-12 col-sm-12 main_content">
+        <div class="col-sm-12 col-xs-12 logo text-center">
+        	<a href="javascript:;"><img src="images/logo.png" alt="Logo" title="Logo" /></a>
+        </div>
+		<div class="col-sm-12 col-xs-12 notification">
+            <div class="row">
+            	<a href="javascript:fun_notification();">Notifications<span id="notificationCountDiv"></span></a>
+            </div>
+        </div>
+		<div class="col-sm-12 col-xs-12 notification">
+			<div class="row">
+            	<i class="fa fa-calendar" style="color: yellow;font-size: 16px;margin-right: 5px;"></i><a href="javascript:fun_event();">Calendar<span id="eventCountDiv"></span></a>
+            </div>
+        </div>
+        <form class="homepage_form" name="frm_home" id="frm_home" action="business_listing.html" method="get" onSubmit="return fun_search();" >
+            <div class="form-group">
+                <div class="col-3 input-effect">
+                	<input class="effect-16" type="text" onKeyUp="fun_autosuggest(this.value);" name="search" id="search" placeholder="">
+                	<label>Search</label>
+                	<span class="focus-border"></span>
+                </div>
+            </div>
+			<div class="auto_suggestname" id="auto_suggestname" style="display:none;">
+			</div>
+            <div class="col-sm-12 col-xs-12 ">
+                <div class="row radio_button">
+                    <div class="col-xs-6 col-md-6 col-sm-6">
+                        <label><input type="radio" name="type" value="1" checked onKeyUp="fun_autosuggest(this.value);"><span>Company</span></label>
+                       
+                    </div>
+                    <div class="col-xs-6 col-md-6 col-sm-6">
+                        <label><input type="radio" name="type" value="4" onKeyUp="fun_autosuggest(this.value);"><span>Nickname</span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-xs-12 ">
+                <div class="row radio_button">
+                    <div class="col-xs-6 col-md-6 col-sm-6">
+                        <label><input type="radio" name="type" value="2" onKeyUp="fun_autosuggest(this.value);"><span>Name</span></label>
+                	</div>
+                    <div class="col-xs-6 col-md-6 col-sm-6">
+                        <label><input type="radio" name="type" value="3" onKeyUp="fun_autosuggest(this.value);"><span>Classification</span></label>
+                    </div>
+                </div>
+            </div>
+        	<input class="btn btn-primary" type="button" onClick="fun_search();"  value="Search" name="" /> 
+        </form>
+        
+    	
+        
+    	
+        
+		<div class="login" id="signupDivMain">
+            <div>
+                <div class="login_vertical_center">
+                    <div class="login_container">
+                    	<span>Register</span>
+                        <div class="col-sm-12 col-xs-12" >
+                        <form class="text-center" name="frm_login" id="frm_login" method="post" action="" autocomplete="off">
+                            <div class="form-group">
+                                <div class="col-3 input-effect">
+                                	<input class="effect-16" type="text" name="firstname" id="firstname" autocomplete="off" value=""   >
+                                    <label>Enter First Name</label>
+                                    <span class="focus-border"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-3 input-effect">
+                                    <input class="effect-16" type="text" name="lastname" id="lastname" autocomplete="off" value=""   >
+                                    <label>Enter Last Name</label>
+                                    <span class="focus-border"></span>
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <div class="col-3 input-effect">
+                                    <input class="effect-16" type="text" name="email" id="email" autocomplete="off" value=""   >
+                                    <label>Enter Your Email</label>
+                                    <span class="focus-border"></span>
+                                </div>
+                            </div>
+                        	<div class="form-group">
+                        	<input type="Button" value="Submit"  onClick="fun_signup();" name="" />
+							</div>
+							<p class="admin_register" onClick="fun_showLogin();">Click here</p><span><p>for</p> Admin Login</span>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="login" id="loginDivMain">
+            <div>
+                <div class="login_vertical_center">
+                    <div class="login_container">
+                    	<span>Admin Login<a href="javascript:;" onClick="fun_hideLogin()"><i class="fa fa-times" aria-hidden="true" style="color:black;"></i></a></span>
+                        <div class="col-sm-12 col-xs-12" >
+                        <form class="text-center" name="frm_login" id="frm_login" method="post" action="" autocomplete="off">
+                            <div class="form-group">
+                                <div class="col-3 input-effect">
+                                	<input class="effect-16" type="text" name="username" id="username" autocomplete="off" value=""  >
+                                    <label>Enter Username</label>
+                                    <span class="focus-border"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-3 input-effect">
+                                    <input class="effect-16" type="password" name="password" id="password" autocomplete="off" value=""   >
+                                    <label>Enter Password</label>
+                                    <span class="focus-border"></span>
+                                </div>
+                            </div>
+                        	<input type="Button" value="Submit"  onClick="fun_login();" name="" />
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="col-sm-12 col-xs-12 address">
+            <div class="row">
+            	<!--<h1><span>A</span>  <span>P</span>RESTIGIOUS <span>N</span>ETWORK OF THE <BR><span>A</span>REA’S <span>T</span>OP <span>B</span>USINESS <span>L</span>EADERS</h1>-->
+				<p>&copy; Executives' Association of the Palm Beaches <br>PO Box 352, West Palm Beach, FL 33402 <br> <a href="tel:(561)758-0627">(561) 758-0627</a></p>
+				<a href="javascript:;" class="admin_login" onClick="fun_showLogin()">Click here for Admin Login</a>
+            </div>
+        </div>
+		<div>
+			<a href="javascript:;" class="version">Version 3.01</a>
+		</div>
+    </div>
+	<script type="text/javascript" src="cordova.js"></script>
+</body>
+</html>
