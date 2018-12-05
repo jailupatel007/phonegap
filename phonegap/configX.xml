@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.phonegap.execs" version="3.00"  versionCode="3" ios-CFBundleVersion="0.1.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0"  xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Go to index.html page for changes version. [palmbeach]-->
+	<name>Execs</name>
+    <description>
+        Executives' Association of the Palm Beaches.
+    </description>
+    <author email="support@phonegap.com" href="http://phonegap.com">
+        PhoneGap Team
+    </author>
+    <content src="index.html" />	
+	
+	<preference name="phonegap-version" value="cli-6.5.0" />
+	<preference name="KeyboardDisplayRequiresUserAction" value="true" />
+	<preference name="android-targetSdkVersion"   value="26" />
+	<preference name="loadUrlTimeoutValue" value="70000" />
+	<preference name="android-build-tool" value="gradle" />
+	<platform name="android">
+		<config-file target="AndroidManifest.xml" parent="/manifest">
+			<uses-permission android:name="android.permission.READ_CALENDAR"/>
+			<uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+			<uses-permission android:name="android.permission.CALL_PHONE"/>
+			<uses-permission android:name="android.permission.INTERNET"/>
+			<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+			<uses-permission android:name="android.permission.VIBRATE" />
+			<uses-permission android:name="android.permission.CAMERA" />
+			<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+			<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+			<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+			<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+			<uses-permission android:name="android.permission.INTERNET" />
+			<uses-permission android:name="android.permission.SEND_SMS" />
+			<uses-permission android:name="android.permission.RECEIVE_SMS" />
+			<uses-permission android:name="android.permission.RECORD_AUDIO" />
+			<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+			<uses-permission android:name="android.permission.READ_CONTACTS" />
+			<uses-permission android:name="android.permission.WRITE_CONTACTS" />
+			<uses-permission android:name="android.permission.WAKE_LOCK" />
+			<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+			<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+			<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+			<uses-permission android:name="android.permission.BROADCAST_STICKY" />
+			<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+			<permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+			<uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
+			
+			<application android:debuggable="false"/>
+		</config-file>
+	</platform>
+	<!-- 2017-05-10
+	<config-file target="AndroidManifest.xml" parent="/manifest/application">
+		<activity android:name="com.adobe.phonegap.push.PushHandlerActivity" android:exported="true"/>
+		<receiver android:name="com.adobe.phonegap.push.CordovaGCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
+			<intent-filter>
+				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
+				<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+				<category android:name="$PACKAGE_NAME" />
+			</intent-filter>
+		</receiver>
+		<service android:name="com.adobe.phonegap.push.GCMIntentService" />
+	</config-file>
+-->
+	<preference name="android-build-tool" value="gradle" />
+	<preference name="fullscreen" value="false"/>
+	<preference name="webviewbounce" value="false" /> 
+	
+	<preference name="android-build-tool" value="gradle" />
+	<!-- 2017-05-10
+	
+	<source-file src="src/android/libs/gcm.jar" target-dir="libs/" />
+	<source-file src="src/android/libs/android-support-v13.jar" target-dir="libs/" />
+	<source-file src="src/android/com/adobe/phonegap/push/CordovaGCMBroadcastReceiver.java" target-dir="src/com/adobe/phonegap/push/" />
+	<source-file src="src/android/com/adobe/phonegap/push/GCMIntentService.java" target-dir="src/com/adobe/phonegap/push/" />
+	<source-file src="src/android/com/adobe/phonegap/push/PushHandlerActivity.java" target-dir="src/com/adobe/phonegap/push/" />
+	<source-file src="src/android/com/adobe/phonegap/push/PushPlugin.java" target-dir="src/com/adobe/phonegap/push/" />
+	-->
+	<plugin name="cordova-plugin-network-information" value="org.apache.cordova.network.Network" source="npm" />
+	<plugin name="cordova-plugin-geolocation" source="npm" spec="~2.1.0" />
+    <plugin name="cordova-plugin-device" value="org.apache.cordova.device" source="npm" spec="~1.1.1" />
+    <plugin name="cordova-plugin-contacts" source="npm" value="org.apache.cordova.contacts"  spec="2.3.1"  />
+    <plugin name="cordova-plugin-device-orientation" source="npm" spec="~1.0.2" />
+    <plugin name="cordova-plugin-dialogs" value="org.apache.cordova.dialogs" source="npm" spec="~1.2.0" />
+    <plugin name="cordova-plugin-vibration" source="npm" spec="~2.1.0" />
+    <plugin name="cordova-plugin-whitelist" source="npm" spec="~1.2.1" />
+	<plugin name="cordova-plugin-statusbar" value="org.apache.cordova.statusbar" source="npm"  />
+	<plugin name="cordova-plugin-x-toast" value="nl.xservices.plugins.Toast" source="npm" />
+	<plugin name="cordova-sms-plugin" value="com.cordova.plugins.sms.Sms" source="npm" />
+	<plugin name="cordova-plugin-badge" value="de.appplant.cordova.plugin.badge.Badge" source="npm" />
+	<plugin name="cordova-plugin-email" value="de.martinreinhardt.cordova.plugins.email.EmailComposer"  source="npm"/>
+	<plugin name="phonegap-plugin-push" source="npm" spec="~1.8.0">
+        <variable name="SENDER_ID" value="1089123328152" />
+    </plugin>
+	<plugin name="uk.co.workingedge.phonegap.plugin.launchnavigator" value="uk.co.workingedge.phonegap.plugin.LaunchNavigator" source="npm" spec="4.2.0" />
+	<plugin name="cordova-plugin-calendar" spec="^4.4.7" value="nl.xservices.plugins.Calendar"  source="npm" />
+	<!--~1.8.0<plugin name="cordova-plugin-camerapicturebackground" spec="https://github.com/an-rahulpandey/cordova-plugin-camerapicturebackground.git" />
+	<plugin name="cordova-plugin-fileopener" spec="^1.0.5" />-->
+	<plugin name="cordova-plugin-x-socialsharing" value="nl.xservices.plugins.SocialSharing"  spec="5.4.0" source="npm"/>
+	
+	<plugin name="cordova-plugin-datetimepicker" spec="^1.1.2" />
+	
+	<preference name="CrosswalkAnimatable" value="true" />
+	
+	<preference name="SplashScreen" value="screen"/>
+    <preference name="SplashScreenDelay" value="1000"/>
+	<preference name="FadeSplashScreenDuration" value="0"/>
+	<preference name="ShowSplashScreenSpinner" value="false"/>	
+	
+	<preference name="StatusBarOverlaysWebView" value="true"/>
+	<preference name="StatusBarBackgroundColor" value="#394cb3"/><!-- #394cb3
+#1c2960 for ios-->
+	<preference name="StatusBarStyle" value="lightcontent"/>
+	
+	
+    <platform name="android">
+        <icon density="ldpi" src="www/res/icon/android/drawable-ldpi-icon.png" />
+        <icon density="mdpi" src="www/res/icon/android/drawable-mdpi-icon.png" />
+        <icon density="hdpi" src="www/res/icon/android/drawable-hdpi-icon.png" />
+        <icon density="xhdpi" src="www/res/icon/android/drawable-xhdpi-icon.png" />
+        <icon density="xxhdpi" src="www/res/icon/android/drawable-xxhdpi-icon.png" />
+        <icon density="xxxhdpi" src="www/res/icon/android/drawable-xxxhdpi-icon.png" />
+    </platform>
+    
+	 <!--<splash density="land-ldpi" src="www/res/screen/android/drawable-land-ldpi-screen.png" />
+        <splash density="land-mdpi" src="www/res/screen/android/drawable-land-mdpi-screen.png" />
+        <splash density="land-hdpi" src="www/res/screen/android/drawable-land-hdpi-screen.png" />
+        <splash density="land-xhdpi" src="www/res/screen/android/drawable-land-xhdpi-screen.png" />
+        <splash density="land-xxhdpi" src="www/res/screen/android/drawable-land-xxhdpi-screen.png" />
+        <splash density="land-xxxhdpi" src="www/res/screen/android/drawable-land-xxxhdpi-screen.png" />
+        <splash density="port-ldpi" src="www/res/screen/android/drawable-port-ldpi-screen.png" />
+        <splash density="port-mdpi" src="www/res/screen/android/drawable-port-mdpi-screen.png" />
+        <splash density="port-hdpi" src="www/res/screen/android/drawable-port-hdpi-screen.png" />
+        <splash density="port-xhdpi" src="www/res/screen/android/drawable-port-xhdpi-screen.png" />
+        <splash density="port-xxhdpi" src="www/res/screen/android/drawable-port-xxhdpi-screen.png" />
+        <splash density="port-xxxhdpi" src="www/res/screen/android/drawable-port-xxxhdpi-screen.png" />
+		<icon height="57" platform="ios" src="res/icon/ios/icon.png" width="57" />
+        <icon height="114" platform="ios" src="res/icon/ios/icon@2x.png" width="114" />
+        <icon height="40" platform="ios" src="res/icon/ios/icon-40.png" width="40" />
+        <icon height="80" platform="ios" src="res/icon/ios/icon-40@2x.png" width="80" />
+        <icon height="50" platform="ios" src="res/icon/ios/icon-50.png" width="50" />
+        <icon height="100" platform="ios" src="res/icon/ios/icon-50@2x.png" width="100" />
+        <icon height="60" platform="ios" src="res/icon/ios/icon-60.png" width="60" />
+        <icon height="120" platform="ios" src="res/icon/ios/icon-60@2x.png" width="120" />
+        <icon height="180" platform="ios" src="res/icon/ios/icon-60@3x.png" width="180" />
+        <icon height="72" platform="ios" src="res/icon/ios/icon-72.png" width="72" />
+        <icon height="144" platform="ios" src="res/icon/ios/icon-72@2x.png" width="144" />
+        <icon height="76" platform="ios" src="res/icon/ios/icon-76.png" width="76" />
+        <icon height="152" platform="ios" src="res/icon/ios/icon-76@2x.png" width="152" />
+        <icon height="29" platform="ios" src="res/icon/ios/icon-small.png" width="29" />
+        <icon height="58" platform="ios" src="res/icon/ios/icon-small@2x.png" width="58" />
+        <icon height="87" platform="ios" src="res/icon/ios/icon-small@3x.png" width="87" />
+		
+        <splash height="1136" platform="ios" src="res/screen/ios/Default-568h@2x~iphone.png" width="640" />
+        <splash height="1334" platform="ios" src="res/screen/ios/Default-667h.png" width="750" />
+        <splash height="2208" platform="ios" src="res/screen/ios/Default-736h.png" width="1242" />
+        <splash height="1242" platform="ios" src="res/screen/ios/Default-Landscape-736h.png" width="2208" />
+        <splash height="1536" platform="ios" src="res/screen/ios/Default-Landscape@2x~ipad.png" width="2048" />
+        <splash height="768" platform="ios" src="res/screen/ios/Default-Landscape~ipad.png" width="1024" />
+        <splash height="2048" platform="ios" src="res/screen/ios/Default-Portrait@2x~ipad.png" width="1536" />
+        <splash height="1024" platform="ios" src="res/screen/ios/Default-Portrait~ipad.png" width="768" />
+        <splash height="960" platform="ios" src="res/screen/ios/Default@2x~iphone.png" width="640" />
+        <splash height="480" platform="ios" src="res/screen/ios/Default~iphone.png" width="320" />
+    -->
+    <platform name="wp8">
+        <icon height="99" platform="wp8" src="www/res/icon/wp8/ApplicationIcon.png" width="99" />
+        <icon height="159" platform="wp8" src="www/res/icon/wp8/Background.png" width="159" />
+        <splash height="1280" platform="wp8" src="www/res/screen/wp8/screen-portrait.jpg" width="768" />
+    </platform>
+    <platform name="windows">
+        <icon height="150" platform="windows" src="www/res/icon/windows/Square150x150Logo.scale-100.png" width="150" />
+        <icon height="30" platform="windows" src="www/res/icon/windows/Square30x30Logo.scale-100.png" width="30" />
+        <icon height="50" platform="windows" src="www/res/icon/windows/StoreLogo.scale-100.png" width="50" />
+        <splash height="300" platform="windows" src="www/res/screen/windows/SplashScreen.scale-100.png" width="620" />
+        <icon height="120" platform="windows" src="www/res/icon/windows/StoreLogo.scale-240.png" width="120" />
+        <icon height="44" platform="windows" src="www/res/icon/windows/Square44x44Logo.scale-100.png" width="44" />
+        <icon height="106" platform="windows" src="www/res/icon/windows/Square44x44Logo.scale-240.png" width="106" />
+        <icon height="70" platform="windows" src="www/res/icon/windows/Square70x70Logo.scale-100.png" width="70" />
+        <icon height="71" platform="windows" src="www/res/icon/windows/Square71x71Logo.scale-100.png" width="71" />
+        <icon height="170" platform="windows" src="www/res/icon/windows/Square71x71Logo.scale-240.png" width="170" />
+        <icon height="360" platform="windows" src="www/res/icon/windows/Square150x150Logo.scale-240.png" width="360" />
+        <icon height="310" platform="windows" src="www/res/icon/windows/Square310x310Logo.scale-100.png" width="310" />
+        <icon height="150" platform="windows" src="www/res/icon/windows/Wide310x150Logo.scale-100.png" width="310" />
+        <icon height="360" platform="windows" src="www/res/icon/windows/Wide310x150Logo.scale-240.png" width="744" />
+        <splash height="1920" platform="windows" src="www/res/screen/windows/SplashScreenPhone.scale-240.png" width="1152" />
+    </platform>
+	
+	
+	
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+</widget>
