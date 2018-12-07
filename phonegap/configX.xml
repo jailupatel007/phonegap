@@ -10,13 +10,22 @@
     </author>
     <content src="index.html" />	
 	
+	
 	<preference name="phonegap-version" value="cli-6.5.0" />
 	<preference name="KeyboardDisplayRequiresUserAction" value="true" />
 	<preference name="android-targetSdkVersion"   value="26" />
 	<preference name="loadUrlTimeoutValue" value="70000" />
 	<preference name="android-build-tool" value="gradle" />
+	
+	<preference name="Cordova-cli " value="cli-8.0.0" />
+	<preference name="Cordova-android " value="6.3.0" />
+	<preference name="cordova-plugin-facebook " value="2.1.0" />
+	<preference name="android-minSdkVersion" value="15" />
+	<preference name="ANDROID_SDK_VERSION" default="4.+"/>
+	
+	
 	<platform name="android">
-		<config-file target="AndroidManifest.xml" parent="/manifest">
+	<config-file target="AndroidManifest.xml" parent="/manifest">
 			<uses-permission android:name="android.permission.READ_CALENDAR"/>
 			<uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 			<uses-permission android:name="android.permission.CALL_PHONE"/>
