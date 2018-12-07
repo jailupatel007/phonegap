@@ -99,6 +99,13 @@
 	<plugin name="phonegap-plugin-push" source="npm" spec="~1.8.0">
         <variable name="SENDER_ID" value="1089123328152" />
     </plugin>
+	
+	<plugin name="cordova-plugin-facebook4" source="npm" spec="1.7.4" > <!--1092084703512-->
+        	<variable name="APP_ID" value="2136271583279775" />
+		<variable name="APP_NAME" value="Facebook Integration" />
+   	 </plugin>
+	
+	
 	<plugin name="uk.co.workingedge.phonegap.plugin.launchnavigator" value="uk.co.workingedge.phonegap.plugin.LaunchNavigator" source="npm" spec="4.2.0" />
 	<plugin name="cordova-plugin-calendar" spec="^4.4.7" value="nl.xservices.plugins.Calendar"  source="npm" />
 	<!--~1.8.0<plugin name="cordova-plugin-camerapicturebackground" spec="https://github.com/an-rahulpandey/cordova-plugin-camerapicturebackground.git" />
